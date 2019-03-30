@@ -56,8 +56,8 @@ namespace Ferris_Junction_Master
                     {
                         sub = key.CreateSubKey("FJMSel", true);
                         sub.SetValue("", "Select for junctioning", RegistryValueKind.String);
-                        //sub = sub.CreateSubKey("command", true);
-                        //sub.SetValue("", "calculator.exe", RegistryValueKind.String);
+                        sub = sub.CreateSubKey("command", true);
+                        sub.SetValue("", "cmd.exe", RegistryValueKind.String);
                     }
                     else
                     {
@@ -77,7 +77,7 @@ namespace Ferris_Junction_Master
 
         public static void DeleteDefaultContextMenuEntry()
         {
-            /*
+            
             string classes = @"Directory\shell\";
             string classes_sub = classes + "FJM";
             using (RegistryKey key = Registry.ClassesRoot.OpenSubKey(classes_sub, true))
@@ -101,10 +101,6 @@ namespace Ferris_Junction_Master
                     MessageBox.Show("Removed FJMSel in LocalMaschine");
                 }
             }
-            //rkKey.DeleteSubKey("FJM", true);
-            //rkKey = Registry.LocalMachine.OpenSubKey(@"Microsoft\Windows\CurrentVersion\Explorer\CommandStore\shell");
-            //rkKey.DeleteSubKey("FJMSelected", true);
-            */
         }
 
 
