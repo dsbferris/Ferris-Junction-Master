@@ -4,11 +4,19 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using System.Linq;
+using NLog;
 
 namespace Ferris_Junction_Master
 {
     public static class ExplorerContextMenu
     {
+        static Logger logger = LogManager.GetCurrentClassLogger();
+
+        public static string FLog(string message)
+        {
+            return "\r\n\t" + message;
+        }
+
         static readonly string ClassesRoot_Background_Directory = @"Directory\Background\shell";
         static readonly string ClassesRoot_Directory = @"Directory\shell\";
         static readonly string LocalMaschine_AllSubCommands = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CommandStore\shell\";
@@ -23,30 +31,34 @@ namespace Ferris_Junction_Master
                     if (sub == null)
                     {                  
                         sub = key.CreateSubKey("FJM", true);
+                        logger.Debug(FLog($"Created RegKey {key.ToString()}")) ;
                         sub.SetValue("MUIVerb", "Ferris Junction Manager", RegistryValueKind.String);
+                        logger.Debug(FLog($"SetValue MUIVerb in {sub.ToString()}"));
                         sub.SetValue("icon", Environment.CurrentDirectory + @"\FJM.exe", RegistryValueKind.String);
+                        logger.Debug(FLog($"SetValue icon in {sub.ToString()}"));
                         sub.SetValue("SubCommands", "FJMSel", RegistryValueKind.String);
-                        MessageBox.Show("Create Context Menu key in Classes Root.");
-                        //rkKey.SetValue("Position", "Top", RegistryValueKind.String);
+                        logger.Debug(FLog($"SetValue SubCommands to FJMSel in {sub.ToString()}"));
+                        //MessageBox.Show("Create Context Menu key in Classes Root.");
                     }
                     else
                     {
-                        MessageBox.Show("Already installed in ClassesRoot", "Error",
-                           MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        logger.Debug(FLog($"{sub.ToString()} was not NULL. Seems like it already exists"));
+                        //MessageBox.Show("Already installed in ClassesRoot", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
 
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                logger.Error(ex, FLog("Error while creating RegKey"));
+                //MessageBox.Show(ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw;
             }
         }
 
         public static void CreateSelectCommand_LocalMaschine()
         { 
-            RegistryKey key;
+            RegistryKey key = null;
             try
             {
                 if (Environment.Is64BitOperatingSystem)
@@ -62,20 +74,24 @@ namespace Ferris_Junction_Master
                 if (sub == null)
                 {
                     sub = key.CreateSubKey("FJMSel", true);
+                    logger.Debug(FLog($"Create RegKey FJMSel in {key.ToString()}"));
                     sub.SetValue("", "Select for junctioning", RegistryValueKind.String);
+
                     sub = sub.CreateSubKey("command", true);
                     sub.SetValue("", Environment.GetCommandLineArgs()[0] + " -a \"%1\"", RegistryValueKind.String);
-                    MessageBox.Show("Create SelectCommand in LocalMaschine.");
+                    logger.Debug(FLog($"Created SubKey command in {sub.ToString()} with value: {sub.GetValue("")}"));
+                    //MessageBox.Show("Create SelectCommand in LocalMaschine.");
                 }
                 else
                 {
-                    MessageBox.Show("Already installed in Local.", "Error",
-                       MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    logger.Debug(FLog($"{sub.ToString()} was not NULL. Seems like it already exists"));
+                    //MessageBox.Show("Already installed in Local.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                logger.Error(ex, FLog($"Error while creating SubKey FJMSel in {key.ToString()}"));
+                //MessageBox.Show(ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw;
             }
 
@@ -91,22 +107,24 @@ namespace Ferris_Junction_Master
                     if (sub == null)
                     {
                         sub = key.CreateSubKey("FJM", true);
+                        logger.Debug(FLog($"Created SubKey FJM in {key.ToString()}"));
                         sub.SetValue("MUIVerb", "Ferris Junction Manager", RegistryValueKind.String);
                         sub.SetValue("icon", Environment.GetCommandLineArgs()[0], RegistryValueKind.String);
-                        //sub.SetValue("SubCommands", subcommand, RegistryValueKind.String);
-                        //rkKey.SetValue("Position", "Top", RegistryValueKind.String);
+                        logger.Debug(FLog($"SetValues for {sub.ToString()}"));
+                        
                     }
                     else
                     {
-                        MessageBox.Show("Already installed in ClassesRoot_Background", "Error",
-                           MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        logger.Debug(FLog($"{sub.ToString()} was not NULL. Seems like it already exists"));
+                        //MessageBox.Show("Already installed in ClassesRoot_Background", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
 
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                logger.Error(ex, FLog("Error while creating RegKey"));
+                //MessageBox.Show(ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw;
             }
         }
@@ -171,7 +189,7 @@ namespace Ferris_Junction_Master
                 using (RegistryKey key = Registry.ClassesRoot.OpenSubKey(ClassesRoot_Directory, true))
                 {
                     RegistryKey sub = key.OpenSubKey("FJM", true);
-                    if (key != null)
+                    if (sub != null)
                     {
                         key.DeleteSubKeyTree("FJM", true);
                         MessageBox.Show("Removed FJM in ClassesRoot: ");
@@ -233,6 +251,7 @@ namespace Ferris_Junction_Master
         public static void AddToBackground(string subcommand)
         {
             //TODO if no FJM key exists, create new
+
         }
 
         public static void RemoveFromBackground(string subcommand)
@@ -269,15 +288,14 @@ namespace Ferris_Junction_Master
                 if (sub != null)
                 {
                     string subs = sub.GetValue("SubCommands").ToString();
-                    if (subs.Contains(";" + subcommand)) subs = subs.Replace(";" + subcommand, String.Empty);
-                    else if (subs.Contains(subcommand + ";")) subs = subs.Replace(subcommand + ";", String.Empty);
+                    if (subs.Contains(subcommand + ";")) subs = subs.Replace(subcommand + ";", String.Empty);
                     else MessageBox.Show("BackGroundDir is not containing: " + subcommand);
 
                     if (string.IsNullOrEmpty(subs))
                     {
-
+                        DeleteAllBackground();
                     }
-                    sub.SetValue("SubCommands", subs, RegistryValueKind.String);
+                    else sub.SetValue("SubCommands", subs, RegistryValueKind.String);
                 }
                 else
                 {

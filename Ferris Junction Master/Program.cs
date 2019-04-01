@@ -3,21 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using NLog;
 
 namespace Ferris_Junction_Master
 {
     static class Program
     {
+        static Logger logger = LogManager.GetCurrentClassLogger();
         /// <summary>
         /// Der Haupteinstiegspunkt für die Anwendung.
         /// </summary>
+        /// 
         [STAThread]
         static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            
+            logger.Debug(ExplorerContextMenu.FLog("Run Application"));
             ProcessCommandLineArgs();
-            Application.Run(new FormMain());
+            //Application.Run(new FormMain());
+            Application.Exit();
         }
 
         static void ProcessCommandLineArgs()
@@ -38,7 +44,8 @@ namespace Ferris_Junction_Master
                     }
                     if (args[i] == "-p")
                     {
-                        PasteFolder(args[i-1], args[i+1]);
+                        PasteFolder(args[i-1], args[i+1], args[i+2]);
+                        break;
                     }
                 }
             }
@@ -57,9 +64,16 @@ namespace Ferris_Junction_Master
             }
         }
 
-        static void PasteFolder(string source, string target)
+        static void PasteFolder(string source, string target, string FJMPasteKey)
         {
-            MessageBox.Show($"Source: {source}\r\nTarget:{target}", "Paste Folder");
+            if(string.IsNullOrEmpty(source) || string.IsNullOrEmpty(target) || string.IsNullOrEmpty(FJMPasteKey))
+            {
+                throw new ArgumentException("source, target, FJMPasteKey");
+            }
+            else
+            {
+
+            }
         }
     }
 }
