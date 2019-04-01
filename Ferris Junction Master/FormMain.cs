@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static Ferris_Junction_Master.ExplorerContextMenu;
 
 namespace Ferris_Junction_Master
 {
@@ -14,22 +15,32 @@ namespace Ferris_Junction_Master
     {
         public FormMain()
         {
+            InitializeComponent();
+            int linecounter = 1;
             foreach(var s in Environment.GetCommandLineArgs())
             {
-                if (s.ToLower().Contains("select".ToLower())) MessageBox.Show("select in args");
+                metroTextBox1.Text += $"Line {linecounter.ToString()}:{s}" + Environment.NewLine;
+                linecounter++;
             }
-            InitializeComponent();
+            for (int i = 0; i < 3; i++) metroTextBox1.Text += Environment.NewLine;
         }
 
         private void MetroButton1_Click(object sender, EventArgs e)
         {
-            //ExplorerContextMenu.CreateClassesRootKey();
-            ExplorerContextMenu.CreateLocalMaschineKey();
+            CreateContextMenu_ClassesRoot();
+            CreateSelectCommand_LocalMaschine();
         }
 
         private void MetroButton2_Click(object sender, EventArgs e)
         {
-            ExplorerContextMenu.DeleteDefaultContextMenuEntry();
+            DeleteClassesRoot();
+            DeleteLocalMaschine();
+            DeleteAllBackground();
+        }
+
+        private void Button1_Click(object sender, EventArgs e)
+        {
+            FolderSelected(@"D:\JunctionTest1234");
         }
     }
 }
