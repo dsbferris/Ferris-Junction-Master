@@ -40,7 +40,9 @@ namespace Ferris_Junction_Master
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            FolderSelected(@"D:\JunctionTest1234");
+            FormPasteFolder fpf = new FormPasteFolder();
+            fpf.Show();
+
         }
     }
 }

@@ -32,10 +32,10 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.metroButton1 = new MetroFramework.Controls.MetroButton();
             this.metroButton2 = new MetroFramework.Controls.MetroButton();
-            this.metroButton3 = new MetroFramework.Controls.MetroButton();
             this.metroTextBox1 = new MetroFramework.Controls.MetroTextBox();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.button1 = new System.Windows.Forms.Button();
+            this.metroButton3 = new MetroFramework.Controls.MetroButton();
             this.SuspendLayout();
             // 
             // metroButton1
@@ -58,17 +58,6 @@
             this.metroButton2.Text = "Remove All Context Menu";
             this.metroButton2.UseSelectable = true;
             this.metroButton2.Click += new System.EventHandler(this.MetroButton2_Click);
-            // 
-            // metroButton3
-            // 
-            this.metroButton3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.metroButton3.BackgroundImage = global::Ferris_Junction_Master.Properties.Resources.iconfinder_settings_115801;
-            this.metroButton3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.metroButton3.Location = new System.Drawing.Point(8, 396);
-            this.metroButton3.Name = "metroButton3";
-            this.metroButton3.Size = new System.Drawing.Size(48, 48);
-            this.metroButton3.TabIndex = 3;
-            this.metroButton3.UseSelectable = true;
             // 
             // metroTextBox1
             // 
@@ -119,6 +108,17 @@
             this.button1.Text = "Test";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.Button1_Click);
+            // 
+            // metroButton3
+            // 
+            this.metroButton3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.metroButton3.BackgroundImage = global::Ferris_Junction_Master.Properties.Resources.iconfinder_settings_115801;
+            this.metroButton3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.metroButton3.Location = new System.Drawing.Point(8, 396);
+            this.metroButton3.Name = "metroButton3";
+            this.metroButton3.Size = new System.Drawing.Size(48, 48);
+            this.metroButton3.TabIndex = 3;
+            this.metroButton3.UseSelectable = true;
             // 
             // FormMain
             // 

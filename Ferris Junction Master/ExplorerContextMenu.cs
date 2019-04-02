@@ -50,7 +50,7 @@ namespace Ferris_Junction_Master
             }
             catch (Exception ex)
             {
-                logger.Error(ex, FLog("Error while creating RegKey"));
+                logger.Fatal(ex, FLog("Error while creating RegKey"));
                 //MessageBox.Show(ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw;
             }
@@ -90,7 +90,7 @@ namespace Ferris_Junction_Master
             }
             catch (Exception ex)
             {
-                logger.Error(ex, FLog($"Error while creating SubKey FJMSel in {key.ToString()}"));
+                logger.Fatal(ex, FLog($"Error while creating SubKey FJMSel in {key.ToString()}"));
                 //MessageBox.Show(ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw;
             }
@@ -123,9 +123,86 @@ namespace Ferris_Junction_Master
             }
             catch (Exception ex)
             {
-                logger.Error(ex, FLog("Error while creating RegKey"));
+                logger.Fatal(ex, FLog("Error while creating RegKey"));
                 //MessageBox.Show(ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw;
+            }
+        }
+
+
+
+        public static void DeleteClassesRoot()
+        {
+            try
+            {
+                using (RegistryKey key = Registry.ClassesRoot.OpenSubKey(ClassesRoot_Directory, true))
+                {
+                    RegistryKey sub = key.OpenSubKey("FJM", true);
+                    if (sub != null)
+                    {
+                        key.DeleteSubKeyTree("FJM", true);
+                        logger.Debug(FLog($"Removd FJM in {key.ToString()}"));
+                        //MessageBox.Show("Removed FJM in ClassesRoot: ");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Fatal(ex, FLog($"Failed while deleting FJM in ClassesRoot"));
+                //MessageBox.Show(ex.ToString(), "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            
+        }
+
+        public static void DeleteLocalMaschine()
+        {
+            RegistryKey key;
+            try
+            {
+                if (Environment.Is64BitOperatingSystem)
+                { //This for 64-Bit
+                    key = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(LocalMaschine_AllSubCommands, true);
+                }
+                else
+                { //This for 32-Bit
+                    key = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey(LocalMaschine_AllSubCommands, true);
+                }
+                foreach(var s in key.GetSubKeyNames())
+                {
+                    if (s.Contains("FJM"))
+                    {
+                        key.DeleteSubKeyTree(s, true);
+                        logger.Debug(FLog($"Removed {s} in {key.ToString()}"));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Fatal(ex, FLog($"Failed removing in LocalMaschine"));
+                //MessageBox.Show(ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        public static void DeleteAllBackground()
+        {
+            try
+            {
+                using (RegistryKey key = Registry.ClassesRoot.OpenSubKey(ClassesRoot_Background_Directory, true))
+                {
+                    RegistryKey sub = key.OpenSubKey("FJM", true);
+                    if (key != null)
+                    {
+                        key.DeleteSubKeyTree("FJM", true);
+                        logger.Debug(FLog($"Removed FJM in {key.ToString()}"));
+                        //MessageBox.Show("Removed FJM in ClassesRoot Background: ");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Fatal(ex, FLog("Failed while deleting FJM in ClassesRoot_Background"));
+                throw;
+                //MessageBox.Show(ex.ToString(), "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -149,14 +226,18 @@ namespace Ferris_Junction_Master
                 while (subs.Contains(fjmpastenr + free_number.ToString())) free_number++;
                 fjmpastenr += free_number.ToString();
 
+                logger.Info(FLog($"Folderpath: {folderpath}\r\n\tFoldername: {foldername}\r\n\tFJMPasteNr: {fjmpastenr}"));
+
                 //Create LocalMaschine Paste Command
                 sub = key.CreateSubKey(fjmpastenr, true);
                 sub.SetValue("", "Paste " + foldername + " here", RegistryValueKind.String);
                 sub = sub.CreateSubKey("command");
+                logger.Debug(FLog($"Created SubKey {sub.ToString()}"));
 
                 //UNDONE
 
-                sub.SetValue("", Environment.GetCommandLineArgs()[0] + $" {folderpath} -p \"%1\"", RegistryValueKind.String);
+                sub.SetValue("", Environment.GetCommandLineArgs()[0] + $" {folderpath} -p \"%1\" {fjmpastenr}", RegistryValueKind.String);
+                logger.Debug(FLog($"SetValue command \"\" to {sub.GetValue("")}"));
 
                 //Create ClassesRoot directory background menu
                 key = Registry.ClassesRoot.OpenSubKey(ClassesRoot_Background_Directory, true);
@@ -167,96 +248,26 @@ namespace Ferris_Junction_Master
                     sub = key.OpenSubKey("FJM", true);
                     //sub = key.CreateSubKey("FJM", true);
                 }
-                var current = sub.GetValue("SubCommands");
-                if(current == null || string.IsNullOrEmpty(current.ToString()))
+                var current_subcommands = sub.GetValue("SubCommands");
+                if (current_subcommands == null || string.IsNullOrEmpty(current_subcommands.ToString()))
                 {
                     sub.SetValue("SubCommands", fjmpastenr + ";", RegistryValueKind.String);
                 }
-                else sub.SetValue("SubCommands", current + fjmpastenr + ";", RegistryValueKind.String);
+                else sub.SetValue("SubCommands", current_subcommands + fjmpastenr + ";", RegistryValueKind.String);
+                logger.Debug(FLog($"SetValue SubCommands in {sub.ToString()} from {current_subcommands} to {sub.GetValue("SubCommands")}"));
             }
             catch (UnauthorizedAccessException ex)
             {
-                MessageBox.Show(ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                logger.Fatal(ex, $"Failed while adding selected Folder");
+                //MessageBox.Show(ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw;
             }
         }
 
 
-        public static void DeleteClassesRoot()
+        public static void FolderPasted(string FJMPasteNr)
         {
-            try
-            {
-                using (RegistryKey key = Registry.ClassesRoot.OpenSubKey(ClassesRoot_Directory, true))
-                {
-                    RegistryKey sub = key.OpenSubKey("FJM", true);
-                    if (sub != null)
-                    {
-                        key.DeleteSubKeyTree("FJM", true);
-                        MessageBox.Show("Removed FJM in ClassesRoot: ");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString(), "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            
-        }
-
-        public static void DeleteLocalMaschine()
-        {
-            RegistryKey key;
-            try
-            {
-                if (Environment.Is64BitOperatingSystem)
-                { //This for 64-Bit
-                    key = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(LocalMaschine_AllSubCommands, true);
-                }
-                else
-                { //This for 32-Bit
-                    key = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey(LocalMaschine_AllSubCommands, true);
-                }
-                foreach(var s in key.GetSubKeyNames())
-                {
-                    if (s.Contains("FJM")) key.DeleteSubKeyTree(s, true);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        public static void DeleteAllBackground()
-        {
-            try
-            {
-                using (RegistryKey key = Registry.ClassesRoot.OpenSubKey(ClassesRoot_Background_Directory, true))
-                {
-                    RegistryKey sub = key.OpenSubKey("FJM", true);
-                    if (key != null)
-                    {
-                        key.DeleteSubKeyTree("FJM", true);
-                        MessageBox.Show("Removed FJM in ClassesRoot Background: ");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString(), "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-
-        public static void AddToBackground(string subcommand)
-        {
-            //TODO if no FJM key exists, create new
-
-        }
-
-        public static void RemoveFromBackground(string subcommand)
-        {
-            if (string.IsNullOrEmpty(subcommand)) return;
+            if (string.IsNullOrEmpty(FJMPasteNr)) return;
 
             //LocalMaschine, remove from CommandStore
             #region LocalMaschine
@@ -271,11 +282,13 @@ namespace Ferris_Junction_Master
                 { //This for 32-Bit
                     key = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey(LocalMaschine_AllSubCommands, true);
                 }
-                key.DeleteSubKeyTree(subcommand, true);
+                key.DeleteSubKeyTree(FJMPasteNr, true);
+                logger.Debug(FLog($"Removed {FJMPasteNr} from {key.ToString()}"));
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                logger.Fatal(ex, FLog($"Error while removing {FJMPasteNr} in LocalMaschine"));
+                //MessageBox.Show(ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw;
             }
             #endregion
@@ -288,33 +301,39 @@ namespace Ferris_Junction_Master
                 if (sub != null)
                 {
                     string subs = sub.GetValue("SubCommands").ToString();
-                    if (subs.Contains(subcommand + ";")) subs = subs.Replace(subcommand + ";", String.Empty);
-                    else MessageBox.Show("BackGroundDir is not containing: " + subcommand);
-
-                    if (string.IsNullOrEmpty(subs))
+                    if (!subs.Contains(FJMPasteNr + ";"))
                     {
-                        DeleteAllBackground();
+                        logger.Error(FLog($"{sub.ToString()} SubCommands does not contain {FJMPasteNr}.\r\n\tSubCommands: {subs}"));
+                        //MessageBox.Show("BackGroundDir is not containing: " + FJMPasteNr);
                     }
-                    else sub.SetValue("SubCommands", subs, RegistryValueKind.String);
+                    else
+                    {
+                        subs = subs.Replace(FJMPasteNr + ";", String.Empty);
+                        if (string.IsNullOrEmpty(subs))
+                        {
+                            logger.Debug(FLog($"After replacement SubCommands contained nothing"));
+                            DeleteAllBackground();
+                        }
+                        else
+                        {
+                            sub.SetValue("SubCommands", subs, RegistryValueKind.String);
+                            logger.Debug(FLog($"SubCommands is now: {subs}"));
+                        }
+
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("No FJM key in Background Directory", "Error",
-                       MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    logger.Error(FLog($"SubKey FJM in {key.ToString()} did not exist"));
+                    //MessageBox.Show("No FJM key in Background Directory", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                logger.Fatal(ex, FLog("Error while deleting selected folder keys"));
+                //MessageBox.Show(ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw;
             }
         }
-
-
-
-        
-
     }
-    
-
 }

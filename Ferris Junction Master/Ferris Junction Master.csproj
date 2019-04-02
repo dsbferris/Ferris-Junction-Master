@@ -98,12 +98,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DiskSpaceControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DiskSpaceControl.Designer.cs">
+      <DependentUpon>DiskSpaceControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="ExplorerContextMenu.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPasteFolder.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPasteFolder.Designer.cs">
+      <DependentUpon>FormPasteFolder.cs</DependentUpon>
     </Compile>
     <Compile Include="FormSettings.cs">
       <SubType>Form</SubType>
@@ -116,22 +128,23 @@
     <Compile Include="JunctionsList.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="DiskSpaceControl.resx">
+      <DependentUpon>DiskSpaceControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPasteFolder.resx">
+      <DependentUpon>FormPasteFolder.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormSettings.resx">
       <DependentUpon>FormSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <None Include="app.manifest" />
     <Content Include="FodyWeavers.xml" />
     <None Include="NLog.config">
@@ -145,6 +158,11 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
