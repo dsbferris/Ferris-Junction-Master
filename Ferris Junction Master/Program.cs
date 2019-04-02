@@ -9,7 +9,7 @@ namespace Ferris_Junction_Master
 {
     static class Program
     {
-        static Logger logger = LogManager.GetCurrentClassLogger();
+        static readonly Logger logger = LogManager.GetCurrentClassLogger();
         /// <summary>
         /// Der Haupteinstiegspunkt für die Anwendung.
         /// </summary>
@@ -29,8 +29,9 @@ namespace Ferris_Junction_Master
         static void ProcessCommandLineArgs()
         {
             string[] args = Environment.GetCommandLineArgs();
-            //string[] args = { @"F:\Visual Studio\Projekte\Ferris Junction Master\Ferris Junction Master\bin\Debug\FJM.exe", "-a", @"D:\JunctionTest1234" };
-            if (args.Length < 3)
+        //string[] args = { @"F:\Visual Studio\Projekte\Ferris Junction Master\Ferris Junction Master\bin\Debug\FJM.exe", @"D:\JunctionTest1234", "-a" };
+        //string[] args = { @"F:\Visual Studio\Projekte\Ferris Junction Master\Ferris Junction Master\bin\Debug\FJM.exe", "FJMPaste1", @"C:\Users\Ferris\Downloads", @"D:\JunctionTest1234", "-p" };
+        if (args.Length < 3)
             {
                 Application.Run(new FormMain());
             }
@@ -40,11 +41,12 @@ namespace Ferris_Junction_Master
                 {
                     if (args[i] == "-a")
                     {
-                        AddFolder(args[i + 1]);
+                        AddFolder(args[i - 1]);
+                        break;
                     }
                     if (args[i] == "-p")
                     {
-                        PasteFolder(args[i-1], args[i+1], args[i+2]);
+                        PasteFolder(FJMPasteKey: args[i - 3], target: args[i - 2], source: args[i - 1]);
                         break;
                     }
                 }
@@ -63,8 +65,13 @@ namespace Ferris_Junction_Master
                 ExplorerContextMenu.FolderSelected(folder);
             }
         }
-
-        static void PasteFolder(string source, string target, string FJMPasteKey)
+        /// <summary>
+        /// Paste command execution
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        /// <param name="FJMPasteKey"></param>
+        static void PasteFolder(string FJMPasteKey, string target, string source)
         {
             if(string.IsNullOrEmpty(source) || string.IsNullOrEmpty(target) || string.IsNullOrEmpty(FJMPasteKey))
             {
@@ -72,7 +79,8 @@ namespace Ferris_Junction_Master
             }
             else
             {
-
+                ExplorerContextMenu.FolderPasted(FJMPasteKey);
+                //TODO : Setup FormPasteFolder, try CustomDiskSpaceControl, make junction code, 
             }
         }
     }

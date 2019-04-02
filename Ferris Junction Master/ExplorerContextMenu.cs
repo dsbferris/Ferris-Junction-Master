@@ -10,7 +10,7 @@ namespace Ferris_Junction_Master
 {
     public static class ExplorerContextMenu
     {
-        static Logger logger = LogManager.GetCurrentClassLogger();
+        static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public static string FLog(string message)
         {
@@ -78,7 +78,7 @@ namespace Ferris_Junction_Master
                     sub.SetValue("", "Select for junctioning", RegistryValueKind.String);
 
                     sub = sub.CreateSubKey("command", true);
-                    sub.SetValue("", Environment.GetCommandLineArgs()[0] + " -a \"%1\"", RegistryValueKind.String);
+                    sub.SetValue("", $"{Environment.GetCommandLineArgs()[0]} \"%1\" -a", RegistryValueKind.String);
                     logger.Debug(FLog($"Created SubKey command in {sub.ToString()} with value: {sub.GetValue("")}"));
                     //MessageBox.Show("Create SelectCommand in LocalMaschine.");
                 }
@@ -144,6 +144,7 @@ namespace Ferris_Junction_Master
                         logger.Debug(FLog($"Removd FJM in {key.ToString()}"));
                         //MessageBox.Show("Removed FJM in ClassesRoot: ");
                     }
+                    else logger.Debug(FLog($"{key.ToString()} SubKey FJM did not exist"));
                 }
             }
             catch (Exception ex)
@@ -190,12 +191,13 @@ namespace Ferris_Junction_Master
                 using (RegistryKey key = Registry.ClassesRoot.OpenSubKey(ClassesRoot_Background_Directory, true))
                 {
                     RegistryKey sub = key.OpenSubKey("FJM", true);
-                    if (key != null)
+                    if (sub != null)
                     {
                         key.DeleteSubKeyTree("FJM", true);
                         logger.Debug(FLog($"Removed FJM in {key.ToString()}"));
                         //MessageBox.Show("Removed FJM in ClassesRoot Background: ");
                     }
+                    else logger.Debug(FLog($"{key.ToString()} SubKey FJM did not exist"));
                 }
             }
             catch (Exception ex)
@@ -211,11 +213,17 @@ namespace Ferris_Junction_Master
         {
             try
             {
-                RegistryKey key;
-                RegistryKey sub;
-                string foldername = new DirectoryInfo(folderpath).Name;
+                DirectoryInfo di = new DirectoryInfo(folderpath);
+                if (!di.Exists)
+                {
+                    logger.Error(FLog($"Folder: {folderpath} does not exist"));
+                    return;
+                }
+                string foldername = di.Name;
                 string fjmpastenr = "FJMPaste";
 
+                RegistryKey key;
+                RegistryKey sub;
 
                 if (Environment.Is64BitOperatingSystem) key = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(LocalMaschine_AllSubCommands, true);
                 else key = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey(LocalMaschine_AllSubCommands, true);
@@ -234,9 +242,9 @@ namespace Ferris_Junction_Master
                 sub = sub.CreateSubKey("command");
                 logger.Debug(FLog($"Created SubKey {sub.ToString()}"));
 
-                //UNDONE
-
-                sub.SetValue("", Environment.GetCommandLineArgs()[0] + $" {folderpath} -p \"%1\" {fjmpastenr}", RegistryValueKind.String);
+                
+                //"FJM.exe", "FJMPasteNr", "TargetFolder", "SourceFolder", "-p"
+                sub.SetValue("", $"{Environment.GetCommandLineArgs()[0]} \"{fjmpastenr}\" \"%1\" \"{folderpath}\" -p", RegistryValueKind.String);
                 logger.Debug(FLog($"SetValue command \"\" to {sub.GetValue("")}"));
 
                 //Create ClassesRoot directory background menu
@@ -254,7 +262,7 @@ namespace Ferris_Junction_Master
                     sub.SetValue("SubCommands", fjmpastenr + ";", RegistryValueKind.String);
                 }
                 else sub.SetValue("SubCommands", current_subcommands + fjmpastenr + ";", RegistryValueKind.String);
-                logger.Debug(FLog($"SetValue SubCommands in {sub.ToString()} from {current_subcommands} to {sub.GetValue("SubCommands")}"));
+                logger.Debug(FLog($"SetValue SubCommands in {sub.ToString()} from {(current_subcommands ?? "[EMPTY]")} to {sub.GetValue("SubCommands")}"));
             }
             catch (UnauthorizedAccessException ex)
             {
@@ -296,11 +304,12 @@ namespace Ferris_Junction_Master
             //ClassesRoot, remove from SubCommands-Value
             try
             {
-                key = Registry.ClassesRoot.OpenSubKey(ClassesRoot_Background_Directory, RegistryKeyPermissionCheck.ReadWriteSubTree, System.Security.AccessControl.RegistryRights.TakeOwnership);
-                RegistryKey sub = key.OpenSubKey("FJM", RegistryKeyPermissionCheck.ReadWriteSubTree, System.Security.AccessControl.RegistryRights.TakeOwnership);
+                key = Registry.ClassesRoot.OpenSubKey(ClassesRoot_Background_Directory, true);
+                RegistryKey sub = key.OpenSubKey("FJM", true);
                 if (sub != null)
                 {
-                    string subs = sub.GetValue("SubCommands").ToString();
+                    object SubCommands = sub.GetValue("SubCommands");
+                    string subs = SubCommands == null ? "" : SubCommands.ToString();
                     if (!subs.Contains(FJMPasteNr + ";"))
                     {
                         logger.Error(FLog($"{sub.ToString()} SubCommands does not contain {FJMPasteNr}.\r\n\tSubCommands: {subs}"));

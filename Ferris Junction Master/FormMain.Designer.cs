@@ -30,34 +30,35 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
-            this.metroButton1 = new MetroFramework.Controls.MetroButton();
-            this.metroButton2 = new MetroFramework.Controls.MetroButton();
+            this.BtnCreate = new MetroFramework.Controls.MetroButton();
+            this.BtnDelete = new MetroFramework.Controls.MetroButton();
             this.metroTextBox1 = new MetroFramework.Controls.MetroTextBox();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
-            this.button1 = new System.Windows.Forms.Button();
+            this.BtnSelect = new System.Windows.Forms.Button();
             this.metroButton3 = new MetroFramework.Controls.MetroButton();
+            this.BtnPaste = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // metroButton1
+            // BtnCreate
             // 
-            this.metroButton1.Location = new System.Drawing.Point(23, 63);
-            this.metroButton1.Name = "metroButton1";
-            this.metroButton1.Size = new System.Drawing.Size(196, 23);
-            this.metroButton1.TabIndex = 0;
-            this.metroButton1.Text = "Create Default Context Menu";
-            this.metroButton1.UseSelectable = true;
-            this.metroButton1.Click += new System.EventHandler(this.MetroButton1_Click);
+            this.BtnCreate.Location = new System.Drawing.Point(23, 63);
+            this.BtnCreate.Name = "BtnCreate";
+            this.BtnCreate.Size = new System.Drawing.Size(196, 23);
+            this.BtnCreate.TabIndex = 0;
+            this.BtnCreate.Text = "Create Default Context Menu";
+            this.BtnCreate.UseSelectable = true;
+            this.BtnCreate.Click += new System.EventHandler(this.BtnCreate_Click);
             // 
-            // metroButton2
+            // BtnDelete
             // 
-            this.metroButton2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.metroButton2.Location = new System.Drawing.Point(325, 63);
-            this.metroButton2.Name = "metroButton2";
-            this.metroButton2.Size = new System.Drawing.Size(196, 23);
-            this.metroButton2.TabIndex = 1;
-            this.metroButton2.Text = "Remove All Context Menu";
-            this.metroButton2.UseSelectable = true;
-            this.metroButton2.Click += new System.EventHandler(this.MetroButton2_Click);
+            this.BtnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.BtnDelete.Location = new System.Drawing.Point(325, 63);
+            this.BtnDelete.Name = "BtnDelete";
+            this.BtnDelete.Size = new System.Drawing.Size(196, 23);
+            this.BtnDelete.TabIndex = 1;
+            this.BtnDelete.Text = "Remove All Context Menu";
+            this.BtnDelete.UseSelectable = true;
+            this.BtnDelete.Click += new System.EventHandler(this.BtnDelete_Click);
             // 
             // metroTextBox1
             // 
@@ -99,15 +100,15 @@
             this.notifyIcon1.Text = "notifyIcon1";
             this.notifyIcon1.Visible = true;
             // 
-            // button1
+            // BtnSelect
             // 
-            this.button1.Location = new System.Drawing.Point(234, 63);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "Test";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.Button1_Click);
+            this.BtnSelect.Location = new System.Drawing.Point(234, 50);
+            this.BtnSelect.Name = "BtnSelect";
+            this.BtnSelect.Size = new System.Drawing.Size(75, 23);
+            this.BtnSelect.TabIndex = 5;
+            this.BtnSelect.Text = "Select";
+            this.BtnSelect.UseVisualStyleBackColor = true;
+            this.BtnSelect.Click += new System.EventHandler(this.BtnSelect_Click);
             // 
             // metroButton3
             // 
@@ -120,16 +121,27 @@
             this.metroButton3.TabIndex = 3;
             this.metroButton3.UseSelectable = true;
             // 
+            // BtnPaste
+            // 
+            this.BtnPaste.Location = new System.Drawing.Point(234, 79);
+            this.BtnPaste.Name = "BtnPaste";
+            this.BtnPaste.Size = new System.Drawing.Size(75, 23);
+            this.BtnPaste.TabIndex = 6;
+            this.BtnPaste.Text = "Paste";
+            this.BtnPaste.UseVisualStyleBackColor = true;
+            this.BtnPaste.Click += new System.EventHandler(this.BtnPaste_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(544, 450);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.BtnPaste);
+            this.Controls.Add(this.BtnSelect);
             this.Controls.Add(this.metroTextBox1);
             this.Controls.Add(this.metroButton3);
-            this.Controls.Add(this.metroButton2);
-            this.Controls.Add(this.metroButton1);
+            this.Controls.Add(this.BtnDelete);
+            this.Controls.Add(this.BtnCreate);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormMain";
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.DropShadow;
@@ -140,12 +152,13 @@
 
         #endregion
 
-        private MetroFramework.Controls.MetroButton metroButton1;
-        private MetroFramework.Controls.MetroButton metroButton2;
+        private MetroFramework.Controls.MetroButton BtnCreate;
+        private MetroFramework.Controls.MetroButton BtnDelete;
         private MetroFramework.Controls.MetroButton metroButton3;
         private MetroFramework.Controls.MetroTextBox metroTextBox1;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button BtnSelect;
+        private System.Windows.Forms.Button BtnPaste;
     }
 }
 
