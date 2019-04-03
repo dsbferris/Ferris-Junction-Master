@@ -10,7 +10,7 @@ namespace Ferris_Junction_Master
 {
     public static class ExplorerContextMenu
     {
-        static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        public static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public static string FLog(string message)
         {

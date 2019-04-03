@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -19,12 +20,14 @@ namespace Ferris_Junction_Master
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
             
             logger.Debug(ExplorerContextMenu.FLog("Run Application"));
             ProcessCommandLineArgs();
             //Application.Run(new FormMain());
             Application.Exit();
         }
+
 
         static void ProcessCommandLineArgs()
         {
@@ -41,11 +44,13 @@ namespace Ferris_Junction_Master
                 {
                     if (args[i] == "-a")
                     {
+                        //TODO Check for NTFS
                         AddFolder(args[i - 1]);
                         break;
                     }
                     if (args[i] == "-p")
                     {
+                        //TODO Check for NTFS
                         PasteFolder(FJMPasteKey: args[i - 3], target: args[i - 2], source: args[i - 1]);
                         break;
                     }

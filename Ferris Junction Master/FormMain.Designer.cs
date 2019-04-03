@@ -35,12 +35,14 @@
             this.metroTextBox1 = new MetroFramework.Controls.MetroTextBox();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.BtnSelect = new System.Windows.Forms.Button();
-            this.metroButton3 = new MetroFramework.Controls.MetroButton();
             this.BtnPaste = new System.Windows.Forms.Button();
+            this.metroButton3 = new MetroFramework.Controls.MetroButton();
+            this.metroButton1 = new MetroFramework.Controls.MetroButton();
             this.SuspendLayout();
             // 
             // BtnCreate
             // 
+            this.BtnCreate.Enabled = false;
             this.BtnCreate.Location = new System.Drawing.Point(23, 63);
             this.BtnCreate.Name = "BtnCreate";
             this.BtnCreate.Size = new System.Drawing.Size(196, 23);
@@ -52,6 +54,7 @@
             // BtnDelete
             // 
             this.BtnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.BtnDelete.Enabled = false;
             this.BtnDelete.Location = new System.Drawing.Point(325, 63);
             this.BtnDelete.Name = "BtnDelete";
             this.BtnDelete.Size = new System.Drawing.Size(196, 23);
@@ -69,16 +72,16 @@
             // 
             // 
             this.metroTextBox1.CustomButton.Image = null;
-            this.metroTextBox1.CustomButton.Location = new System.Drawing.Point(239, 1);
+            this.metroTextBox1.CustomButton.Location = new System.Drawing.Point(347, 2);
             this.metroTextBox1.CustomButton.Name = "";
-            this.metroTextBox1.CustomButton.Size = new System.Drawing.Size(285, 285);
+            this.metroTextBox1.CustomButton.Size = new System.Drawing.Size(175, 175);
             this.metroTextBox1.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
             this.metroTextBox1.CustomButton.TabIndex = 1;
             this.metroTextBox1.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
             this.metroTextBox1.CustomButton.UseSelectable = true;
             this.metroTextBox1.CustomButton.Visible = false;
             this.metroTextBox1.Lines = new string[0];
-            this.metroTextBox1.Location = new System.Drawing.Point(8, 103);
+            this.metroTextBox1.Location = new System.Drawing.Point(8, 210);
             this.metroTextBox1.MaxLength = 32767;
             this.metroTextBox1.Multiline = true;
             this.metroTextBox1.Name = "metroTextBox1";
@@ -88,7 +91,7 @@
             this.metroTextBox1.SelectionLength = 0;
             this.metroTextBox1.SelectionStart = 0;
             this.metroTextBox1.ShortcutsEnabled = true;
-            this.metroTextBox1.Size = new System.Drawing.Size(525, 287);
+            this.metroTextBox1.Size = new System.Drawing.Size(525, 180);
             this.metroTextBox1.TabIndex = 4;
             this.metroTextBox1.UseSelectable = true;
             this.metroTextBox1.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
@@ -102,6 +105,7 @@
             // 
             // BtnSelect
             // 
+            this.BtnSelect.Enabled = false;
             this.BtnSelect.Location = new System.Drawing.Point(234, 50);
             this.BtnSelect.Name = "BtnSelect";
             this.BtnSelect.Size = new System.Drawing.Size(75, 23);
@@ -109,6 +113,17 @@
             this.BtnSelect.Text = "Select";
             this.BtnSelect.UseVisualStyleBackColor = true;
             this.BtnSelect.Click += new System.EventHandler(this.BtnSelect_Click);
+            // 
+            // BtnPaste
+            // 
+            this.BtnPaste.Enabled = false;
+            this.BtnPaste.Location = new System.Drawing.Point(234, 79);
+            this.BtnPaste.Name = "BtnPaste";
+            this.BtnPaste.Size = new System.Drawing.Size(75, 23);
+            this.BtnPaste.TabIndex = 6;
+            this.BtnPaste.Text = "Paste";
+            this.BtnPaste.UseVisualStyleBackColor = true;
+            this.BtnPaste.Click += new System.EventHandler(this.BtnPaste_Click);
             // 
             // metroButton3
             // 
@@ -121,21 +136,22 @@
             this.metroButton3.TabIndex = 3;
             this.metroButton3.UseSelectable = true;
             // 
-            // BtnPaste
+            // metroButton1
             // 
-            this.BtnPaste.Location = new System.Drawing.Point(234, 79);
-            this.BtnPaste.Name = "BtnPaste";
-            this.BtnPaste.Size = new System.Drawing.Size(75, 23);
-            this.BtnPaste.TabIndex = 6;
-            this.BtnPaste.Text = "Paste";
-            this.BtnPaste.UseVisualStyleBackColor = true;
-            this.BtnPaste.Click += new System.EventHandler(this.BtnPaste_Click);
+            this.metroButton1.Location = new System.Drawing.Point(144, 142);
+            this.metroButton1.Name = "metroButton1";
+            this.metroButton1.Size = new System.Drawing.Size(238, 23);
+            this.metroButton1.TabIndex = 7;
+            this.metroButton1.Text = "Paste Form";
+            this.metroButton1.UseSelectable = true;
+            this.metroButton1.Click += new System.EventHandler(this.MetroButton1_Click);
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(544, 450);
+            this.Controls.Add(this.metroButton1);
             this.Controls.Add(this.BtnPaste);
             this.Controls.Add(this.BtnSelect);
             this.Controls.Add(this.metroTextBox1);
@@ -146,6 +162,7 @@
             this.Name = "FormMain";
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.DropShadow;
             this.Text = "Ferris Junction Master";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormMain_FormClosed);
             this.ResumeLayout(false);
 
         }
@@ -159,6 +176,7 @@
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.Button BtnSelect;
         private System.Windows.Forms.Button BtnPaste;
+        private MetroFramework.Controls.MetroButton metroButton1;
     }
 }
 

@@ -7,7 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 using static Ferris_Junction_Master.ExplorerContextMenu;
+using static Ferris_Junction_Master.DirSizeCalculation;
 
 namespace Ferris_Junction_Master
 {
@@ -24,6 +26,7 @@ namespace Ferris_Junction_Master
             }
             for (int i = 0; i < 3; i++) metroTextBox1.Text += Environment.NewLine;
         }
+        
 
         private void BtnCreate_Click(object sender, EventArgs e)
         {
@@ -48,6 +51,19 @@ namespace Ferris_Junction_Master
         {
             //string[] args = { @"F:\Visual Studio\Projekte\Ferris Junction Master\Ferris Junction Master\bin\Debug\FJM.exe", "FJMPaste1", @"C:\Users\Ferris\Downloads", @"D:\JunctionTest1234", "-p" };
             FolderPasted("FJMPaste1");
+        }
+
+        private void MetroButton1_Click(object sender, EventArgs e)
+        {
+            var f = new FormPasteFolder();
+            f.Show();
+        }
+
+        private void FormMain_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            //Prevent over 9000 notify icons after debugging
+            notifyIcon1.Visible = false;
+            notifyIcon1.Dispose();
         }
     }
 }

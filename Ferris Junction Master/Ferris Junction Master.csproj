@@ -78,6 +78,8 @@
     <Reference Include="NLog.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.Windows.Forms.4.2.3\lib\net35\NLog.Windows.Forms.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.Install" />
@@ -87,6 +89,7 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -96,13 +99,17 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DiskSpaceControl.cs">
+    <Compile Include="DirSizeCalculation.cs" />
+    <Compile Include="DiskSpace.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="DiskSpaceControl.Designer.cs">
-      <DependentUpon>DiskSpaceControl.cs</DependentUpon>
+    <Compile Include="DiskSpace.Designer.cs">
+      <DependentUpon>DiskSpace.cs</DependentUpon>
     </Compile>
     <Compile Include="ExplorerContextMenu.cs" />
     <Compile Include="FormMain.cs">
@@ -128,8 +135,8 @@
     <Compile Include="JunctionsList.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="DiskSpaceControl.resx">
-      <DependentUpon>DiskSpaceControl.cs</DependentUpon>
+    <EmbeddedResource Include="DiskSpace.resx">
+      <DependentUpon>DiskSpace.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
